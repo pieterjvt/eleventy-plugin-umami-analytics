@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "checkJs": true,
+        "allowJs": true
+    },
+    "exclude": [
+        "test"
+    ]
+}

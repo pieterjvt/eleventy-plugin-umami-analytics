@@ -1,0 +1,51 @@
+{
+    "name": "eleventy-plugin-umami-analytics",
+    "version": "1.0.0",
+    "description": "Eleventy plugin that adds Umami analytics to your code via automatic injection or shortcodes.",
+    "keywords": [
+        "eleventy",
+        "11ty",
+        "eleventy-plugin",
+        "umami",
+        "analytics",
+        "script",
+        "inject",
+        "shortcodes"
+    ],
+    "homepage": "https://github.com/pieterjvt/eleventy-plugin-umami-analytics",
+    "bugs": {
+        "url": "https://github.com/pieterjvt/eleventy-plugin-umami-analytics/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/pieterjvt/eleventy-plugin-umami-analytics.git"
+    },
+    "author": "Pieter van Tienhoven <pieter@pieter.lol> (https://pieter.lol/)",
+    "main": "index.js",
+    "exports": {
+        ".": "./index.js"
+    },
+    "files": [
+        "index.js",
+        "src/",
+        "README.md",
+        "LICENSE"
+    ],
+    "scripts": {
+        "test": "ava",
+        "test:watch": "ava"
+    },
+    "ava": {
+        "files": [
+            "test/**/*.test.js"
+        ]
+    },
+    "type": "module",
+    "license": "MIT",
+    "devDependencies": {
+        "@11ty/eleventy": "^3.1.5",
+        "ava": "^8.0.1",
+        "posthtml": "^0.16.7",
+        "posthtml-match-helper": "^2.0.3"
+    }
+}
