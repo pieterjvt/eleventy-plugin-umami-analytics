@@ -1,7 +1,7 @@
 {
     "name": "eleventy-plugin-umami-analytics",
     "version": "1.0.0",
-    "description": "Eleventy plugin that adds Umami analytics to your code via automatic injection or shortcodes.",
+    "description": "An Eleventy plugin for effortless Umami Analytics integration and flexible customization.",
     "keywords": [
         "eleventy",
         "11ty",

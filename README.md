@@ -1,11 +1,12 @@
-# eleventy-plugin-umami-analytics
+# Eleventy Plugin Umami Analytics
 
-An [Eleventy](https://www.11ty.dev/) plugin that automatically injects [Umami Analytics](https://umami.is/) into your HTML pages using a PostHTML transform, and optionally tags outbound links (or any element) with Umami event attributes.
+An [Eleventy](https://www.11ty.dev/) plugin for effortless [Umami Analytics](https://umami.is/) integration with flexible customization.
 
 ## Requirements
 
-- Eleventy 3.x (uses `htmlTransformer.addPosthtmlPlugin`)
 - Node.js 18+
+- Eleventy 2.x+ for the base plugin
+- Eleventy 3.x+ when using the HTML transform integration (`eleventyUmamiTransformPlugin`)
 
 ## Installation
 
@@ -49,6 +50,45 @@ const umami = new UmamiAnalytics(
 
 // Returns an HTML string: <script src="..." data-website-id="..." defer></script>
 const scriptTag = umami.script();
+```
+
+### Custom Shortcode
+
+You can build your own [Eleventy shortcode](https://www.11ty.dev/docs/plugins/image-shortcodes/) around `UmamiAnalytics` for full control over rendering. This is useful when you want to call the shortcode from templates directly, or when you need to pass per-page options dynamically.
+
+```js
+import UmamiAnalytics from "eleventy-plugin-umami-analytics";
+
+export default function (eleventyConfig) {
+    eleventyConfig.addShortcode("umami", function (websiteId, options = {}) {
+        const umami = new UmamiAnalytics(
+            "https://cloud.umami.is/script.js",
+            websiteId,
+            options
+        );
+        return umami.script();
+    });
+};
+```
+
+Then call it from any template:
+
+```njk
+{% umami "your-website-id" %}
+```
+
+You can also use `addAsyncShortcode` if you need to resolve the website ID or options asynchronously, for example from a data file or environment variable:
+
+```js
+eleventyConfig.addAsyncShortcode("umami", async function (options = {}) {
+    const websiteId = process.env.UMAMI_WEBSITE_ID;
+    const umami = new UmamiAnalytics(
+        "https://cloud.umami.is/script.js",
+        websiteId,
+        options
+    );
+    return umami.script();
+});
 ```
 
 ## Plugin Options
