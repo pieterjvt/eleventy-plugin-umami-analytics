@@ -21,9 +21,10 @@
         "url": "git+https://github.com/pieterjvt/eleventy-plugin-umami-analytics.git"
     },
     "author": "Pieter van Tienhoven <pieter@pieter.lol> (https://pieter.lol/)",
-    "main": "index.js",
+    "main": "./index.js",
     "exports": {
-        ".": "./index.js"
+        ".": "./index.js",
+        "./umami": "./src/umami.js"
     },
     "files": [
         "index.js",
@@ -33,7 +34,7 @@
     ],
     "scripts": {
         "test": "ava",
-        "test:watch": "ava"
+        "test:watch": "ava --watch"
     },
     "ava": {
         "files": [
@@ -42,6 +43,19 @@
     },
     "type": "module",
     "license": "MIT",
+    "peerDependencies": {
+        "@11ty/eleventy": ">=3.0.0",
+        "posthtml": "^0.16.7",
+        "posthtml-match-helper": "^2.0.3"
+    },
+    "peerDependenciesMeta": {
+        "posthtml": {
+            "optional": true
+        },
+        "posthtml-match-helper": {
+            "optional": true
+        }
+    },
     "devDependencies": {
         "@11ty/eleventy": "^3.1.5",
         "ava": "^8.0.1",

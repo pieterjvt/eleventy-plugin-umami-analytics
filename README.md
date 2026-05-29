@@ -5,7 +5,6 @@ An [Eleventy](https://www.11ty.dev/) plugin for effortless [Umami Analytics](htt
 ## Requirements
 
 - Node.js 18+
-- Eleventy 2.x+ for the base plugin
 - Eleventy 3.x+ when using the HTML transform integration (`eleventyUmamiTransformPlugin`)
 
 ## Installation
@@ -40,7 +39,7 @@ export default function (eleventyConfig) {
 If you want to generate the script tag yourself (e.g. in a Nunjucks/Liquid shortcode), you can use the `UmamiAnalytics` class directly:
 
 ```js
-import UmamiAnalytics from "eleventy-plugin-umami-analytics";
+import UmamiAnalytics from "eleventy-plugin-umami-analytics/umami";
 
 const umami = new UmamiAnalytics(
     "https://cloud.umami.is/script.js",
@@ -57,7 +56,7 @@ const scriptTag = umami.script();
 You can build your own [Eleventy shortcode](https://www.11ty.dev/docs/shortcodes/) around `UmamiAnalytics` for full control over rendering. This is useful when you want to call the shortcode from templates directly, or when you need to pass per-page options dynamically.
 
 ```js
-import UmamiAnalytics from "eleventy-plugin-umami-analytics";
+import UmamiAnalytics from "eleventy-plugin-umami-analytics/umami";
 
 export default function (eleventyConfig) {
     eleventyConfig.addShortcode("umami", function (websiteId, options = {}) {
