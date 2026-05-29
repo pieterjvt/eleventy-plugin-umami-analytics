@@ -54,7 +54,7 @@ const scriptTag = umami.script();
 
 ### Custom Shortcode
 
-You can build your own [Eleventy shortcode](https://www.11ty.dev/docs/plugins/image-shortcodes/) around `UmamiAnalytics` for full control over rendering. This is useful when you want to call the shortcode from templates directly, or when you need to pass per-page options dynamically.
+You can build your own [Eleventy shortcode](https://www.11ty.dev/docs/shortcodes/) around `UmamiAnalytics` for full control over rendering. This is useful when you want to call the shortcode from templates directly, or when you need to pass per-page options dynamically.
 
 ```js
 import UmamiAnalytics from "eleventy-plugin-umami-analytics";
