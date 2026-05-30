@@ -9,11 +9,14 @@ import attributes from "./attributes.js";
 /** @typedef {Record<string, string>} UmamiPrefixedAttributes */
 
 /**
+ * Resolves each attribute handler in `attributes` using the provided config, returning a new
+ * object. Null/undefined entries are omitted.
+ *
  * @param {UmamiAttributes} attributesConfig
  * @returns {UmamiProcessedAttributes}
  */
 function makeAttributes(attributesConfig) {
-    /** @type Record<string, string> */
+    /** @type Record<string, String> */
     const result = {};
     for (const [key, fn] of Object.entries(attributes)) {
         const value = fn(attributesConfig);
@@ -23,6 +26,9 @@ function makeAttributes(attributesConfig) {
 }
 
 /**
+ * Returns a new object with each key prefixed with "data-" and each value quote-escaped.
+ * Null/undefined entries are omitted.
+ *
  * @param {UmamiProcessedAttributes} attributes
  * @returns {UmamiPrefixedAttributes}
  */
@@ -36,6 +42,8 @@ function prefixAttributes(attributes) {
 }
 
 /**
+ * Returns a string of HTML attributes formatted as key="value" pairs.
+ *
  * @param {UmamiPrefixedAttributes} attributes
  * @returns {string}
  */
@@ -45,11 +53,12 @@ function convertAttributesToHtml(attributes) {
         .join(" ");
 }
 
+/** Builds and manages Umami Analytics script attributes and HTML output. */
 class UmamiAnalytics {
     /**
-     * @param {string} scriptUrl
-     * @param {string} websiteId
-     * @param {UmamiAttributes} attributesConfig
+     * @param {string} scriptUrl - URL of the Umami script.
+     * @param {string} websiteId - Umami website ID.
+     * @param {UmamiAttributes} [attributesConfig] - Optional base attribute config.
      */
     constructor(scriptUrl, websiteId, attributesConfig = {}) {
         this.scriptUrl = scriptUrl;
@@ -61,6 +70,9 @@ class UmamiAnalytics {
     }
 
     /**
+     * Resolves event properties against the provided context and returns a new object of prefixed
+     * event attributes, or null if none resolved.
+     *
      * @param {UmamiEventOptions} eventOptions
      * @param {any} context
      * @returns
@@ -69,7 +81,7 @@ class UmamiAnalytics {
         if (!eventOptions) return null;
 
         const { key, properties } = eventOptions;
-        /** @type Record<string, string> */
+        /** @type Record<string, String> */
         const resolved = {};
 
         for (const [property, callback] of Object.entries(properties)) {
@@ -88,6 +100,9 @@ class UmamiAnalytics {
     }
 
     /**
+     * Returns a new object with the base attributes, (optional) resolved event attributes and
+     * (optional) overrides.
+     *
      * @param {UmamiEventOptions} [eventOptions]
      * @param {UmamiAttributes} [overrides]
      * @param {any} [context]
@@ -104,6 +119,9 @@ class UmamiAnalytics {
     }
 
     /**
+     * Returns the full script HTML string, with base attributes, (optional) resolved event
+     * attributes and (optional) overrides.
+     *
      * @param {UmamiEventOptions} eventOptions
      * @param {UmamiAttributes} overrides
      * @param {any} context
@@ -115,6 +133,7 @@ class UmamiAnalytics {
     }
 
     /**
+     * Resolves `enabled` against the provided context and returns the boolean result.
      *
      * @param {boolean | function} enabled
      * @param {any} context

@@ -40,6 +40,9 @@ const defaultOptions = {
 };
 
 /**
+ * Eleventy transform plugin that injects Umami Analytics into HTML output via PostHTML. Adds the
+ * tracking script, optional event attributes, and cleans up plugin-specific markup.
+ *
  * @param {import("@11ty/eleventy/UserConfig").default} eleventyConfig
  * @param {TransformPluginOptions} pluginOptions
  */
@@ -62,11 +65,19 @@ async function eleventyUmamiTransformPlugin(eleventyConfig, pluginOptions) {
      * @returns {PostHtmlTree}
      */
 
-    /** @type {TreeTransformer} */
+    /**
+     * Injects the Umami script tag into the <head>, falling back to <body> if no<head> is found.
+     *
+     * @type {TreeTransformer}
+     */
     function injectScript(tree) {
         let injected = false;
 
-        /** @param {PostHtmlNode} node */
+        /**
+         * Appends the Umami script node to the given element's content.
+         *
+         * @param {PostHtmlNode} node
+         */
         function appendScript(node) {
             node.content ??= [];
             node.content.push({
@@ -92,7 +103,12 @@ async function eleventyUmamiTransformPlugin(eleventyConfig, pluginOptions) {
         return tree;
     }
 
-    /** @type {TreeTransformer} */
+    /**
+     * Matches nodes against the event matcher and injects resolved Umami event attributes. Nodes
+     * with `umami:ignore` are skipped and the attribute removed.
+     *
+     * @type {TreeTransformer}
+     */
     function injectEvent(tree) {
         const event = options.umami.event;
         if (!event) return tree;
@@ -120,7 +136,11 @@ async function eleventyUmamiTransformPlugin(eleventyConfig, pluginOptions) {
         return tree;
     }
 
-    /** @type {TreeTransformer} */
+    /**
+     * Removes any remaining `umami:ignore` attributes from all nodes.
+     *
+     * @type {TreeTransformer}
+     */
     function removeUmamiAttributes(tree) {
         tree.match({ tag: /\w+/ }, (node) => {
             if (node.attrs?.["umami:ignore"] !== undefined) {
@@ -134,6 +154,9 @@ async function eleventyUmamiTransformPlugin(eleventyConfig, pluginOptions) {
     }
 
     /**
+     * Returns a PostHTML plugin that injects the Umami script and event attributes, gated on the
+     * resolved `enabled` option.
+     *
      * @param {Record<string, any>} context
      * @returns {(tree: PostHtmlTree) => PostHtmlTree}
      */

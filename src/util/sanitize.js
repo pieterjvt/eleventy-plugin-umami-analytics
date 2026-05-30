@@ -1,4 +1,6 @@
 /**
+ * Converts camelCase to kebab-case and strips invalid attribute key characters.
+ *
  * @param {string} key
  * @returns {string}
  */

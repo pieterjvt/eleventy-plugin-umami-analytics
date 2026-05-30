@@ -7,6 +7,8 @@ function isObject(value) {
 }
 
 /**
+ * Deep merges `overrides` into `defaults`, recursing into nested objects.
+ *
  * @param {Record<string, any>} defaults
  * @param {Record<string, any>} overrides
  * @returns {Record<string, any>}

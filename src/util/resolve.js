@@ -1,6 +1,6 @@
 /**
  * @param {boolean | function | any} value
- * @param  {...any} args
+ * @param {...any} args
  * @returns {boolean}
  */
 function resolveBool(value, ...args) {
@@ -10,7 +10,7 @@ function resolveBool(value, ...args) {
 
 /**
  * @param {function | any} value
- * @param  {...any} args
+ * @param {...any} args
  * @returns {any}
  */
 function resolveValue(value, ...args) {
