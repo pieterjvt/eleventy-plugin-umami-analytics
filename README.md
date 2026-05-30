@@ -1,25 +1,25 @@
-# Eleventy Plugin Umami Analytics
+# Eleventy Plugin Umami Analytics [![NPM Version](https://img.shields.io/npm/v/eleventy-plugin-umami-analytics)](https://npm.im/eleventy-plugin-umami-analytics)
 
-An [Eleventy](https://www.11ty.dev/) plugin for effortless [Umami Analytics](https://umami.is/) integration with flexible customization.
+An [Eleventy](https://www.11ty.dev/) plugin for integrating [Umami Analytics](https://umami.is/) with flexible customization options.
 
 ## Requirements
 
 - Node.js 18+
-- Eleventy 3.x+ when using the HTML transform integration (`eleventyUmamiTransformPlugin`)
+- Eleventy 3.x+ (for the HTML transform plugin)
 
 ## Installation
 
 ```sh
-npm install eleventy-plugin-umami-analytics
+npm install --save-dev eleventy-plugin-umami-analytics
 ```
 
 ## Usage
 
 ### Transform Plugin (recommended)
 
-The transform plugin automatically injects the Umami script into every HTML page and optionally adds event tracking attributes to matching elements.
+Automatically injects the Umami script into every HTML page and optionally adds event tracking attributes to matching elements.
 
-In your Eleventy config file (`eleventy.config.js`):
+In your Eleventy config (`eleventy.config.js`):
 
 ```js
 import { eleventyUmamiTransformPlugin } from "eleventy-plugin-umami-analytics";
@@ -34,9 +34,9 @@ export default function (eleventyConfig) {
 };
 ```
 
-### Script Tag (manual)
+### JavaScript API
 
-If you want to generate the script tag yourself (e.g. in a Nunjucks/Liquid shortcode), you can use the `UmamiAnalytics` class directly:
+Use the `UmamiAnalytics` class directly for full control:
 
 ```js
 import UmamiAnalytics from "eleventy-plugin-umami-analytics/umami";
@@ -47,13 +47,13 @@ const umami = new UmamiAnalytics(
     { /* optional attributes config */ }
 );
 
-// Returns an HTML string: <script src="..." data-website-id="..." defer></script>
+// Returns: <script src="..." data-website-id="..." defer></script>
 const scriptTag = umami.script();
 ```
 
 ### Custom Shortcode
 
-You can build your own [Eleventy shortcode](https://www.11ty.dev/docs/shortcodes/) around `UmamiAnalytics` for full control over rendering. This is useful when you want to call the shortcode from templates directly, or when you need to pass per-page options dynamically.
+Build an [Eleventy shortcode](https://www.11ty.dev/docs/shortcodes/) around `UmamiAnalytics` when you need to call it from templates or pass per-page options dynamically:
 
 ```js
 import UmamiAnalytics from "eleventy-plugin-umami-analytics/umami";
@@ -70,13 +70,13 @@ export default function (eleventyConfig) {
 };
 ```
 
-Then call it from any template:
+Then in any template:
 
 ```njk
 {% umami "your-website-id" %}
 ```
 
-You can also use `addAsyncShortcode` if you need to resolve the website ID or options asynchronously, for example from a data file or environment variable:
+Use `addAsyncShortcode` if the website ID or options need to be resolved asynchronously, for example from an environment variable:
 
 ```js
 eleventyConfig.addAsyncShortcode("umami", async function (options = {}) {
@@ -94,22 +94,22 @@ eleventyConfig.addAsyncShortcode("umami", async function (options = {}) {
 
 | Option | Type | Default | Description |
 |---|---|---|---|
-| `enabled` | `boolean \| (context) => boolean` | `true` | Whether to inject the script. Can be a function receiving the page context. |
-| `ignore` | `boolean` | `true` | If `true`, elements with the `umami:ignore` attribute are skipped for event injection. |
+| `enabled` | `boolean \| (context) => boolean` | `true` | Whether to inject the script. Accepts a function receiving the page context. |
+| `ignore` | `boolean` | `true` | Skip event injection on elements with `umami:ignore`. |
 | `extensions` | `string[]` | `["html"]` | File extensions to run the transform on. |
 | `umami.url` | `string` | *required* | URL of the Umami script. |
 | `umami.websiteId` | `string` | *required* | Your Umami website ID. |
-| `umami.attributes` | `UmamiAttributes` | `{}` | Extra Umami `data-` attributes for the script tag (see below). |
-| `umami.event` | `UmamiEventOptions` | see below | Configuration for automatic event attribute injection. |
+| `umami.attributes` | `UmamiAttributes` | `{}` | Extra `data-*` attributes for the script tag (see below). |
+| `umami.event` | `UmamiEventOptions` | see below | Automatic event attribute injection config. |
 
 ### `umami.attributes`
 
-Controls the `data-*` attributes added to the injected `<script>` tag. Corresponds to [Umami's tracker configuration](https://umami.is/docs/tracker-configuration).
+Maps to [Umami's tracker configuration](https://docs.umami.is/docs/tracker-configuration) options.
 
 | Key | Type | Description |
 |---|---|---|
 | `hostUrl` | `string` | Sets `data-host-url` |
-| `domains` | `string \| string[]` | Sets `data-domains` (array is joined with commas) |
+| `domains` | `string \| string[]` | Sets `data-domains` (array joined with commas) |
 | `tag` | `string` | Sets `data-tag` |
 | `beforeSend` | `string` | Sets `data-before-send` |
 | `performance` | `boolean` | Sets `data-performance="true"` |
@@ -120,31 +120,32 @@ Controls the `data-*` attributes added to the injected `<script>` tag. Correspon
 
 ### `umami.event`
 
-Controls automatic injection of Umami event attributes onto matched elements.
+Controls which elements get [Umami event](https://docs.umami.is/docs/track-events) attributes and what values they receive.
 
 | Key | Type | Default | Description |
 |---|---|---|---|
-| `matcher` | `string` | `"a"` | [PostHTML match](https://github.com/posthtml/posthtml-match-helper) selector for elements to track. |
+| `matcher` | `string` | `"a"` | [PostHTML selector](https://github.com/posthtml/posthtml-match-helper) for elements to track. |
 | `key` | `string` | `"outbound-link-click"` | Value for `data-umami-event`. |
-| `properties` | `Record<string, (node) => string \| undefined>` | see below | Map of event property names to resolver functions. |
+| `properties` | `Record<string, (node) => string \| undefined>` | see below | Event property names mapped to resolver functions. |
 
-By default, event tracking is applied to all `<a>` tags whose `href` points to an external URL, adding:
-
+By default, event tracking applies to `<a>` tags with an external `href`, implementing [Umami's outbound link tracking](https://docs.umami.is/docs/track-outbound-links):
 ```html
-<a href="https://example.com" data-umami-event="outbound-link-click" data-umami-event-url="https://example.com/">
+<a href="https://example.com"
+   data-umami-event="outbound-link-click"
+   data-umami-event-url="https://example.com/">
 ```
 
-To disable event injection entirely, set `umami.event` to `false` or `null`.
+Set `umami.event` to `false` or `null` to disable event injection entirely.
 
-### Ignoring elements
+### Ignoring Elements
 
-Add the `umami:ignore` attribute to any element to skip event injection for it:
+Add `umami:ignore` to skip event injection on a specific element:
 
 ```html
 <a href="https://example.com" umami:ignore>Not tracked</a>
 ```
 
-The attribute is removed from the final HTML output. This requires `ignore: true` (the default).
+The attribute is stripped from the final HTML. Requires `ignore: true` (the default).
 
 ## `UmamiAnalytics` API
 
@@ -152,21 +153,22 @@ The attribute is removed from the final HTML output. This requires `ignore: true
 
 Creates a new instance.
 
-### `.script(eventOptions?, overrides?, context?): string`
+### `.script(eventOptions?, overrides?, context?)`
 
-Returns a full `<script>` HTML string ready to insert into a template.
+Returns a full `<script>` tag as an HTML string, ready to insert into a template.
 
-### `.attributes(eventOptions?, overrides?, context?): Record<string, string>`
+### `.attributes(eventOptions?, overrides?, context?)`
 
 Returns an object of `data-*` attributes suitable for spreading into a PostHTML node.
 
-### `.parseEvent(eventOptions, context): Record<string, string> | null`
+### `.parseEvent(eventOptions, context)`
 
-Resolves event attribute values for a given context node. Returns `null` if no properties resolved to a value.
+Resolves event attribute values for a given context node. Returns `null` if no properties resolved.
 
-### `.isEnabled(enabled, context): boolean`
+### `.isEnabled(enabled, context)`
 
 Resolves a boolean or function to determine whether tracking is active.
 
 ## License
-This project is licensed under the [MIT License](LICENSE).
+
+[MIT](LICENSE)
