@@ -34,7 +34,12 @@
     ],
     "scripts": {
         "test": "ava",
-        "test:watch": "ava --watch"
+        "test:watch": "ava --watch",
+        "lint": "eslint src/ index.js",
+        "lint:fix": "eslint src/ index.js --fix",
+        "format": "prettier --write src/ index.js test/",
+        "format:check": "prettier --check src/ index.js test/",
+        "release": "np"
     },
     "ava": {
         "files": [
@@ -58,8 +63,13 @@
     },
     "devDependencies": {
         "@11ty/eleventy": "^3.1.5",
+        "@eslint/js": "^10.0.1",
         "ava": "^8.0.1",
+        "eslint": "^10.4.1",
+        "eslint-config-prettier": "^10.1.8",
+        "globals": "^17.6.0",
         "posthtml": "^0.16.7",
-        "posthtml-match-helper": "^2.0.3"
+        "posthtml-match-helper": "^2.0.3",
+        "prettier": "^3.8.3"
     }
 }
