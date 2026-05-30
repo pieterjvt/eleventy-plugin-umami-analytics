@@ -27,6 +27,7 @@ const defaultOptions = {
                     const href = node.attrs?.href;
                     if (!href) return undefined;
 
+                    // Only set URL property when href is absolute.
                     const url = new URL(href, "http://internal");
                     if (url.host !== "internal") {
                         return url.href;
@@ -80,6 +81,8 @@ async function eleventyUmamiTransformPlugin(eleventyConfig, pluginOptions) {
          */
         function appendScript(node) {
             node.content ??= [];
+
+            // Insert the script properly, using PostHTML Node.content.
             node.content.push({
                 tag: "script",
                 attrs: {
@@ -97,6 +100,7 @@ async function eleventyUmamiTransformPlugin(eleventyConfig, pluginOptions) {
         tree.match({ tag: "head" }, appendScript);
 
         if (!injected) {
+            // Fallback to body if head wasn't injected.
             tree.match({ tag: "body" }, appendScript);
         }
 
@@ -116,6 +120,7 @@ async function eleventyUmamiTransformPlugin(eleventyConfig, pluginOptions) {
         const { matcher } = event;
 
         tree.match(matchHelper(matcher), (node) => {
+            // Skip if umami:ignore is set (and options.ignore is true).
             if (options.ignore && node.attrs?.["umami:ignore"] !== undefined) {
                 delete node.attrs["umami:ignore"];
                 return node;
