@@ -10,10 +10,7 @@ test("overrides a top-level key", (t) => {
 });
 
 test("deep merges nested objects", (t) => {
-    t.deepEqual(
-        mergeOptions({ a: { b: 1, c: 2 } }, { a: { b: 99 } }),
-        { a: { b: 99, c: 2 } }
-    );
+    t.deepEqual(mergeOptions({ a: { b: 1, c: 2 } }, { a: { b: 99 } }), { a: { b: 99, c: 2 } });
 });
 
 test("replaces arrays wholesale rather than merging", (t) => {

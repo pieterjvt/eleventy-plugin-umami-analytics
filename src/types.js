@@ -1,4 +1,4 @@
-/** Relaxing type definition of `content` to allow strings. 
+/** Relaxing type definition of `content` to allow strings.
  * @typedef {Omit<import("posthtml").Node, "content"> & { content?: Array<any | string> }} PostHtmlNode */
 /** @typedef {PostHtmlNode[] & import("posthtml").NodeAPI} PostHtmlTree */
 

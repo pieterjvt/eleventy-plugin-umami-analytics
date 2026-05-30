@@ -6,7 +6,10 @@ test("resolveValue returns a plain value as-is", (t) => {
 });
 
 test("resolveValue calls a function with args and returns the result", (t) => {
-    t.is(resolveValue((x) => x * 2, 5), 10);
+    t.is(
+        resolveValue((x) => x * 2, 5),
+        10,
+    );
 });
 
 test("resolveBool casts truthy values to true", (t) => {

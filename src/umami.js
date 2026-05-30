@@ -36,7 +36,7 @@ function prefixAttributes(attributes) {
 }
 
 /**
- * @param {UmamiPrefixedAttributes} attributes 
+ * @param {UmamiPrefixedAttributes} attributes
  * @returns {string}
  */
 function convertAttributesToHtml(attributes) {
@@ -47,9 +47,9 @@ function convertAttributesToHtml(attributes) {
 
 class UmamiAnalytics {
     /**
-     * @param {string} scriptUrl 
-     * @param {string} websiteId 
-     * @param {UmamiAttributes} attributesConfig 
+     * @param {string} scriptUrl
+     * @param {string} websiteId
+     * @param {UmamiAttributes} attributesConfig
      */
     constructor(scriptUrl, websiteId, attributesConfig = {}) {
         this.scriptUrl = scriptUrl;
@@ -61,9 +61,9 @@ class UmamiAnalytics {
     }
 
     /**
-     * @param {UmamiEventOptions} eventOptions 
-     * @param {any} context 
-     * @returns 
+     * @param {UmamiEventOptions} eventOptions
+     * @param {any} context
+     * @returns
      */
     parseEvent(eventOptions, context) {
         if (!eventOptions) return null;
@@ -104,21 +104,21 @@ class UmamiAnalytics {
     }
 
     /**
-     * @param {UmamiEventOptions} eventOptions 
-     * @param {UmamiAttributes} overrides 
-     * @param {any} context 
+     * @param {UmamiEventOptions} eventOptions
+     * @param {UmamiAttributes} overrides
+     * @param {any} context
      * @returns {string}
      */
     script(eventOptions, overrides, context) {
         const attrs = convertAttributesToHtml(this.attributes(eventOptions, overrides, context));
         return `<script src="${escapeQuotes(this.scriptUrl)}" ${attrs} defer></script>`;
     }
-    
+
     /**
-     * 
-     * @param {boolean | function} enabled 
-     * @param {any} context 
-     * @returns 
+     *
+     * @param {boolean | function} enabled
+     * @param {any} context
+     * @returns
      */
     isEnabled(enabled, context) {
         return resolveBool(enabled, context);

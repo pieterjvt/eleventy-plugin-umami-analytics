@@ -34,7 +34,7 @@ async function defaultEventKey() {
     const pluginFn = await capturePlugin(baseOptions);
     // process a known outbound link and extract whatever key was applied
     const result = await posthtml([pluginFn({})]).process(
-        `<html><head></head><body><a href="https://example.com">link</a></body></html>`
+        `<html><head></head><body><a href="https://example.com">link</a></body></html>`,
     );
     const match = result.html.match(/data-umami-event="([^"]+)"/);
     return match?.[1];
@@ -55,7 +55,7 @@ test("falls back to <body> if no <head>", async (t) => {
 test("adds data-umami-event to outbound links using the configured key", async (t) => {
     const key = await defaultEventKey();
     const html = await transform(
-        `<html><head></head><body><a href="https://example.com">link</a></body></html>`
+        `<html><head></head><body><a href="https://example.com">link</a></body></html>`,
     );
     t.true(html.includes(`data-umami-event="${key}"`));
     t.true(html.includes('data-umami-event-url="https://example.com/"'));
@@ -64,31 +64,40 @@ test("adds data-umami-event to outbound links using the configured key", async (
 test("uses a custom event key when configured", async (t) => {
     const html = await transform(
         `<html><head></head><body><a href="https://example.com">link</a></body></html>`,
-        { umami: { ...baseOptions.umami, event: { matcher: "a", key: "custom-key", properties: { url: (node) => node.attrs?.href } } } }
+        {
+            umami: {
+                ...baseOptions.umami,
+                event: {
+                    matcher: "a",
+                    key: "custom-key",
+                    properties: { url: (node) => node.attrs?.href },
+                },
+            },
+        },
     );
     t.true(html.includes('data-umami-event="custom-key"'));
 });
 
 test("does not add event attrs to internal links", async (t) => {
     const html = await transform(
-        `<html><head></head><body><a href="/about">link</a></body></html>`
+        `<html><head></head><body><a href="/about">link</a></body></html>`,
     );
     t.false(html.includes("data-umami-event"));
 });
 
 test("skips elements with umami:ignore and removes the attribute", async (t) => {
     const html = await transform(
-        `<html><head></head><body><a href="https://example.com" umami:ignore>link</a></body></html>`
+        `<html><head></head><body><a href="https://example.com" umami:ignore>link</a></body></html>`,
     );
     t.false(html.includes("data-umami-event"));
     t.false(html.includes("umami:ignore"));
 });
 
 test("skips injection when enabled is false", async (t) => {
-    const html = await transform(
-        "<html><head></head><body></body></html>",
-        { ...baseOptions, enabled: false }
-    );
+    const html = await transform("<html><head></head><body></body></html>", {
+        ...baseOptions,
+        enabled: false,
+    });
     t.false(html.includes("<script"));
 });
 
@@ -96,7 +105,7 @@ test("resolves enabled as a function using context", async (t) => {
     const html = await transform(
         "<html><head></head><body></body></html>",
         { ...baseOptions, enabled: (ctx) => ctx.inject },
-        { inject: false }
+        { inject: false },
     );
     t.false(html.includes("<script"));
 });

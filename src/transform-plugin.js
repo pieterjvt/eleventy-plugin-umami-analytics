@@ -16,7 +16,7 @@ const defaultOptions = {
     umami: {
         url: "",
         websiteId: "",
-        
+
         attributes: {},
 
         event: {
@@ -33,11 +33,11 @@ const defaultOptions = {
                     }
 
                     return undefined;
-                }
-            }
+                },
+            },
         },
-    }
-}
+    },
+};
 
 /**
  * @param {import("@11ty/eleventy/UserConfig").default} eleventyConfig
@@ -58,7 +58,7 @@ async function eleventyUmamiTransformPlugin(eleventyConfig, pluginOptions) {
 
     /**
      * @callback TreeTransformer
-     * @param {PostHtmlTree} tree 
+     * @param {PostHtmlTree} tree
      * @returns {PostHtmlTree}
      */
 
@@ -98,7 +98,7 @@ async function eleventyUmamiTransformPlugin(eleventyConfig, pluginOptions) {
         if (!event) return tree;
 
         const { matcher } = event;
-        
+
         tree.match(matchHelper(matcher), (node) => {
             if (options.ignore && node.attrs?.["umami:ignore"] !== undefined) {
                 delete node.attrs["umami:ignore"];
@@ -132,7 +132,7 @@ async function eleventyUmamiTransformPlugin(eleventyConfig, pluginOptions) {
 
         return tree;
     }
-    
+
     /**
      * @param {Record<string, any>} context
      * @returns {(tree: PostHtmlTree) => PostHtmlTree}
@@ -143,21 +143,19 @@ async function eleventyUmamiTransformPlugin(eleventyConfig, pluginOptions) {
             if (!tracker.isEnabled(options.enabled, context)) return tree;
 
             injectScript(tree);
-            
+
             if (options.umami?.event) injectEvent(tree);
 
             removeUmamiAttributes(tree);
 
             return tree;
-        }
+        };
     }
-    
+
     // @ts-ignore
-    eleventyConfig.htmlTransformer.addPosthtmlPlugin(
-        options.extensions.join(","),
-        postHtmlPlugin,
-        { priority: 1 },
-    );
+    eleventyConfig.htmlTransformer.addPosthtmlPlugin(options.extensions.join(","), postHtmlPlugin, {
+        priority: 1,
+    });
 }
 
 export default eleventyUmamiTransformPlugin;
